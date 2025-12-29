@@ -288,10 +288,12 @@
                 grid-template-columns: 1fr;
             }
 
+            .crossword-grid {
+                gap: 1px;
+            }
+
             .cell {
-                width: 38px;
-                height: 38px;
-                font-size: 18px;
+                font-size: 16px;
             }
 
             h1 {
@@ -668,18 +670,27 @@
         function renderGrid() {
             const grid = document.getElementById('crosswordGrid');
             grid.innerHTML = '';
-            grid.style.gridTemplateColumns = `repeat(${currentPuzzle.size}, 45px)`;
+
+            // Responsive cell size
+            const isMobile = window.innerWidth <= 768;
+            const cellSize = isMobile ? Math.min(38, Math.floor((window.innerWidth - 80) / currentPuzzle.size)) : 45;
+
+            grid.style.gridTemplateColumns = `repeat(${currentPuzzle.size}, ${cellSize}px)`;
 
             for (let row = 0; row < currentPuzzle.size; row++) {
                 for (let col = 0; col < currentPuzzle.size; col++) {
-                    const cellDiv = document.createElement('div');
-                    cellDiv.style.position = 'relative';
+                    const cellContainer = document.createElement('div');
+                    cellContainer.style.position = 'relative';
+                    cellContainer.style.width = cellSize + 'px';
+                    cellContainer.style.height = cellSize + 'px';
 
                     const cell = document.createElement('input');
                     cell.className = 'cell';
                     cell.maxLength = 1;
                     cell.dataset.row = row;
                     cell.dataset.col = col;
+                    cell.style.width = '100%';
+                    cell.style.height = '100%';
 
                     if (currentPuzzle.grid[row][col] === '') {
                         cell.classList.add('black');
@@ -690,7 +701,15 @@
                             const numberSpan = document.createElement('span');
                             numberSpan.className = 'cell-number';
                             numberSpan.textContent = currentPuzzle.numbering[cellKey];
-                            cellDiv.appendChild(numberSpan);
+                            numberSpan.style.position = 'absolute';
+                            numberSpan.style.top = '2px';
+                            numberSpan.style.left = '3px';
+                            numberSpan.style.fontSize = '9px';
+                            numberSpan.style.fontWeight = '700';
+                            numberSpan.style.color = 'var(--forest)';
+                            numberSpan.style.pointerEvents = 'none';
+                            numberSpan.style.zIndex = '10';
+                            cellContainer.appendChild(numberSpan);
                         }
 
                         cell.addEventListener('click', () => selectCell(row, col));
@@ -698,8 +717,8 @@
                         cell.addEventListener('keydown', (e) => handleKeyDown(e, row, col));
                     }
 
-                    cellDiv.appendChild(cell);
-                    grid.appendChild(cellDiv);
+                    cellContainer.appendChild(cell);
+                    grid.appendChild(cellContainer);
                 }
             }
         }
