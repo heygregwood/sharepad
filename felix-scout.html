@@ -518,6 +518,13 @@
             reader.onload = function(e) {
                 showDebug('✅ Photo loaded! Adding to collection...');
 
+                // ALWAYS reload from localStorage first to get the latest state
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    photos = JSON.parse(stored);
+                    showDebug(`📂 Reloaded ${photos.length} from storage before adding`);
+                }
+
                 const beforeCount = photos.length;
                 showDebug(`Before: ${beforeCount} photos in array`);
 
@@ -527,7 +534,11 @@
                     showDebug(`After push: ${afterCount} photos in array`);
 
                     savePhotos();
-                    showDebug(`Saved to localStorage`);
+
+                    // Reload from storage to verify
+                    const verify = localStorage.getItem(STORAGE_KEY);
+                    photos = JSON.parse(verify);
+                    showDebug(`📂 Reloaded ${photos.length} from storage after save`);
 
                     renderPhotos();
                     updateProgress();
