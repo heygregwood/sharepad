@@ -416,9 +416,12 @@
             const stored = localStorage.getItem(STORAGE_KEY);
             if (stored) {
                 photos = JSON.parse(stored);
+                showDebug(`📂 Loaded ${photos.length} photos from storage`);
                 renderPhotos();
                 updateProgress();
                 checkVictory();
+            } else {
+                showDebug('No saved photos found. Ready to scan!');
             }
         }
 
@@ -504,15 +507,21 @@
             reader.onload = function(e) {
                 showDebug('✅ Photo loaded! Adding to collection...');
 
+                const beforeCount = photos.length;
+                showDebug(`Before: ${beforeCount} photos in array`);
+
                 if (photos.length < MAX_PHOTOS) {
                     photos.push(e.target.result);
+                    const afterCount = photos.length;
+                    showDebug(`After push: ${afterCount} photos in array`);
+
                     savePhotos();
+                    showDebug(`Saved to localStorage`);
+
                     renderPhotos();
                     updateProgress();
                     playScannerBeep();
                     checkVictory();
-                    showDebug('✅ Salamander #' + photos.length + ' added!');
-                    setTimeout(() => showDebug('Ready to scan!'), 2000);
                 }
             };
 
@@ -531,6 +540,8 @@
             const grid = document.getElementById('photoGrid');
             grid.innerHTML = '';
 
+            showDebug(`🖼️ Rendering ${photos.length} photos...`);
+
             photos.forEach((photo, index) => {
                 const item = document.createElement('div');
                 item.className = 'photo-item';
@@ -540,11 +551,15 @@
                 `;
                 grid.appendChild(item);
             });
+
+            showDebug(`✅ ${photos.length} photos displayed! Ready for more!`);
         }
 
         function updateProgress() {
             const count = photos.length;
             const percentage = (count / MAX_PHOTOS) * 100;
+
+            showDebug(`📊 Update: ${count}/${MAX_PHOTOS} = ${percentage}%`);
 
             document.getElementById('counter').textContent = `🦎 ${count}/${MAX_PHOTOS} SALAMANDERS`;
             document.getElementById('progressBar').style.width = percentage + '%';
