@@ -432,19 +432,46 @@
 
         function handlePhoto(event) {
             const file = event.target.files[0];
-            if (!file) return;
+            if (!file) {
+                console.log('No file selected');
+                return;
+            }
+
+            console.log('Photo captured, file size:', file.size);
+
+            // Show loading feedback
+            const scanBtn = document.querySelector('.scan-btn');
+            const originalText = scanBtn.textContent;
+            scanBtn.textContent = '⏳ PROCESSING...';
+            scanBtn.disabled = true;
 
             const reader = new FileReader();
+
+            reader.onerror = function(error) {
+                console.error('FileReader error:', error);
+                alert('Error reading photo. Please try again!');
+                scanBtn.textContent = originalText;
+                scanBtn.disabled = false;
+            };
+
             reader.onload = function(e) {
+                console.log('Photo loaded, data length:', e.target.result.length);
+
                 if (photos.length < MAX_PHOTOS) {
                     photos.push(e.target.result);
+                    console.log('Photo added, total photos:', photos.length);
                     savePhotos();
                     renderPhotos();
                     updateProgress();
                     playScannerBeep();
                     checkVictory();
                 }
+
+                // Re-enable button
+                scanBtn.textContent = originalText;
+                scanBtn.disabled = false;
             };
+
             reader.readAsDataURL(file);
 
             // Reset input so same photo can be taken again
