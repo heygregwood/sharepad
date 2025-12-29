@@ -210,6 +210,18 @@
             transform: scale(0.9);
         }
 
+        .debug-status {
+            background: rgba(255, 255, 0, 0.9);
+            color: black;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            border: 3px solid orange;
+        }
+
         .reminder-banner {
             position: fixed;
             bottom: 0;
@@ -362,6 +374,8 @@
             </div>
         </div>
 
+        <div class="debug-status" id="debugStatus">Ready to scan!</div>
+
         <button class="scan-btn" onclick="openCamera()">
             📷 SCAN
         </button>
@@ -451,45 +465,54 @@
             oscillator.stop(audioContext.currentTime + 0.1);
         }
 
+        function showDebug(msg) {
+            document.getElementById('debugStatus').textContent = msg;
+        }
+
         function openCamera() {
             if (photos.length >= MAX_PHOTOS) {
                 alert('Mission complete! Start a NEW MISSION to scan more!');
                 return;
             }
+            showDebug('📸 Opening camera...');
             document.getElementById('cameraInput').click();
         }
 
         function handlePhoto(event) {
+            showDebug('⏳ Processing photo...');
+
             const file = event.target.files[0];
 
             // Reset input first so same photo can be taken again
             event.target.value = '';
 
             if (!file) {
-                console.log('No file selected');
+                showDebug('❌ No photo selected');
+                setTimeout(() => showDebug('Ready to scan!'), 2000);
                 return;
             }
 
-            console.log('Photo captured, file size:', file.size);
+            showDebug('📷 Photo captured! Size: ' + Math.round(file.size/1024) + 'KB');
 
             const reader = new FileReader();
 
             reader.onerror = function(error) {
-                console.error('FileReader error:', error);
+                showDebug('❌ Error reading photo!');
                 alert('Error reading photo. Please try again!');
             };
 
             reader.onload = function(e) {
-                console.log('Photo loaded, data length:', e.target.result.length);
+                showDebug('✅ Photo loaded! Adding to collection...');
 
                 if (photos.length < MAX_PHOTOS) {
                     photos.push(e.target.result);
-                    console.log('Photo added, total photos:', photos.length);
                     savePhotos();
                     renderPhotos();
                     updateProgress();
                     playScannerBeep();
                     checkVictory();
+                    showDebug('✅ Salamander #' + photos.length + ' added!');
+                    setTimeout(() => showDebug('Ready to scan!'), 2000);
                 }
             };
 
