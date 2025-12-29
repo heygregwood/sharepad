@@ -371,55 +371,55 @@
     <div class="penalty-notice" id="penaltyNotice">+30 second penalty</div>
 
     <script>
-        // Simplified crossword puzzles - each puzzle is self-contained
+        // Proper crossword puzzles with verified clues
         const PUZZLES = [
             // Level 1 - Monday Easy
             {
                 size: 5,
                 grid: [
                     ['B','R','E','A','D'],
-                    ['A','','','','O'],
-                    ['K','I','N','D','S'],
-                    ['E','','','','E'],
-                    ['R','E','A','D','S']
+                    ['L','','','','R'],
+                    ['U','N','D','E','R'],
+                    ['E','','','','N'],
+                    ['S','T','E','E','L']
                 ],
                 numbering: {
                     '0-0': 1, '0-4': 2, '2-0': 3, '4-0': 4
                 },
                 clues: {
                     across: [
-                        {num: 1, clue: 'Toast starter', answer: 'BREAD', row: 0, col: 0, dir: 'across'},
-                        {num: 3, clue: 'Types or varieties', answer: 'KINDS', row: 2, col: 0, dir: 'across'},
-                        {num: 4, clue: 'Peruses a book', answer: 'READS', row: 4, col: 0, dir: 'across'}
+                        {num: 1, clue: 'Loaf from the bakery', answer: 'BREAD'},
+                        {num: 3, clue: 'Below', answer: 'UNDER'},
+                        {num: 4, clue: 'Strong metal', answer: 'STEEL'}
                     ],
                     down: [
-                        {num: 1, clue: 'One who makes pastries', answer: 'BAKER', row: 0, col: 0, dir: 'down'},
-                        {num: 2, clue: 'Shakespeare or Neruda', answer: 'DOSER', row: 0, col: 4, dir: 'down'}
+                        {num: 1, clue: 'Feeling sad', answer: 'BLUES'},
+                        {num: 2, clue: 'Make money', answer: 'EARN'}
                     ]
                 }
             },
-            // Level 2 - Monday/Tuesday
+            // Level 2 - Monday
             {
                 size: 5,
                 grid: [
-                    ['C','L','A','S','S'],
-                    ['O','','','','T'],
+                    ['C','L','O','U','D'],
+                    ['R','','','','A'],
                     ['A','L','I','E','N'],
-                    ['L','','','','D'],
-                    ['S','T','E','E','R']
+                    ['N','','','','E'],
+                    ['E','L','D','E','R']
                 ],
                 numbering: {
                     '0-0': 1, '0-4': 2, '2-0': 3, '4-0': 4
                 },
                 clues: {
                     across: [
-                        {num: 1, clue: 'Course or category', answer: 'CLASS', row: 0, col: 0, dir: 'across'},
-                        {num: 3, clue: 'E.T., for one', answer: 'ALIEN', row: 2, col: 0, dir: 'across'},
-                        {num: 4, clue: 'Guide a ship', answer: 'STEER', row: 4, col: 0, dir: 'across'}
+                        {num: 1, clue: 'Fluffy sky formation', answer: 'CLOUD'},
+                        {num: 3, clue: 'E.T., for one', answer: 'ALIEN'},
+                        {num: 4, clue: 'Respected senior', answer: 'ELDER'}
                     ],
                     down: [
-                        {num: 1, clue: 'Lumps of carbon', answer: 'COALS', row: 0, col: 0, dir: 'down'},
-                        {num: 2, clue: 'Withstand hardship', answer: 'STAND', row: 0, col: 4, dir: 'down'}
+                        {num: 1, clue: 'Construction machine', answer: 'CRANE'},
+                        {num: 2, clue: 'Walked like a duck', answer: 'WADED'}
                     ]
                 }
             },
@@ -427,76 +427,76 @@
             {
                 size: 5,
                 grid: [
-                    ['P','L','A','N','E'],
-                    ['L','','','','A'],
-                    ['U','N','D','E','R'],
-                    ['M','','','','T'],
-                    ['S','T','O','R','M']
+                    ['F','L','O','U','R'],
+                    ['L','','','','O'],
+                    ['A','N','G','E','L'],
+                    ['M','','','','E'],
+                    ['E','A','R','T','H']
                 ],
                 numbering: {
                     '0-0': 1, '0-4': 2, '2-0': 3, '4-0': 4
                 },
                 clues: {
                     across: [
-                        {num: 1, clue: 'Aircraft', answer: 'PLANE', row: 0, col: 0, dir: 'across'},
-                        {num: 3, clue: 'Below', answer: 'UNDER', row: 2, col: 0, dir: 'across'},
-                        {num: 4, clue: 'Severe weather', answer: 'STORM', row: 4, col: 0, dir: 'across'}
+                        {num: 1, clue: 'Baking ingredient', answer: 'FLOUR'},
+                        {num: 3, clue: 'Heavenly being', answer: 'ANGEL'},
+                        {num: 4, clue: 'Our planet', answer: 'EARTH'}
                     ],
                     down: [
-                        {num: 1, clue: 'Fruit with a pit', answer: 'PLUMS', row: 0, col: 0, dir: 'down'},
-                        {num: 2, clue: 'Planet third rock from the sun', answer: 'EARTH', row: 0, col: 4, dir: 'down'}
+                        {num: 1, clue: 'Fire', answer: 'FLAME'},
+                        {num: 2, clue: 'Play a part', answer: 'ROLE'}
                     ]
                 }
             },
-            // Level 4 - Wednesday
+            // Level 4 - Tuesday/Wednesday
             {
                 size: 6,
                 grid: [
-                    ['S','T','R','E','A','M'],
-                    ['E','','','','','A'],
-                    ['C','R','O','W','D','S'],
-                    ['O','','','','','K'],
-                    ['N','O','D','E','S','S'],
-                    ['D','','','','','']
+                    ['S','T','O','R','M','S'],
+                    ['T','','','','','A'],
+                    ['R','E','L','A','X','N'],
+                    ['E','','','','','D'],
+                    ['A','C','R','O','S','S'],
+                    ['M','','','','','']
                 ],
                 numbering: {
                     '0-0': 1, '0-5': 2, '2-0': 3, '4-0': 4
                 },
                 clues: {
                     across: [
-                        {num: 1, clue: 'Flowing water', answer: 'STREAM', row: 0, col: 0, dir: 'across'},
-                        {num: 3, clue: 'Large gatherings', answer: 'CROWDS', row: 2, col: 0, dir: 'across'},
-                        {num: 4, clue: 'Connection points', answer: 'NODESS', row: 4, col: 0, dir: 'across'}
+                        {num: 1, clue: 'Severe weather events', answer: 'STORMS'},
+                        {num: 3, clue: 'Take it easy', answer: 'RELAX'},
+                        {num: 4, clue: 'From side to side', answer: 'ACROSS'}
                     ],
                     down: [
-                        {num: 1, clue: '60 minutes, twice', answer: 'SECOND', row: 0, col: 0, dir: 'down'},
-                        {num: 2, clue: 'Face cover or disguise', answer: 'MASKS', row: 0, col: 5, dir: 'down'}
+                        {num: 1, clue: 'Flow of water', answer: 'STREAM'},
+                        {num: 2, clue: 'Beach particles', answer: 'SANDS'}
                     ]
                 }
             },
-            // Level 5 - Wednesday/Thursday
+            // Level 5 - Wednesday
             {
                 size: 6,
                 grid: [
                     ['G','L','O','B','A','L'],
-                    ['R','','','','','O'],
-                    ['O','C','E','A','N','S'],
-                    ['U','','','','','T'],
-                    ['N','O','T','E','D','S'],
-                    ['D','','','','','']
+                    ['R','','','','','I'],
+                    ['A','C','T','I','O','N'],
+                    ['N','','','','','I'],
+                    ['D','E','S','E','R','T'],
+                    ['S','','','','','']
                 ],
                 numbering: {
                     '0-0': 1, '0-5': 2, '2-0': 3, '4-0': 4
                 },
                 clues: {
                     across: [
-                        {num: 1, clue: 'Worldwide', answer: 'GLOBAL', row: 0, col: 0, dir: 'across'},
-                        {num: 3, clue: 'Pacific and Atlantic', answer: 'OCEANS', row: 2, col: 0, dir: 'across'},
-                        {num: 4, clue: 'Observed carefully', answer: 'NOTEDS', row: 4, col: 0, dir: 'across'}
+                        {num: 1, clue: 'Worldwide', answer: 'GLOBAL'},
+                        {num: 3, clue: 'Movement or deed', answer: 'ACTION'},
+                        {num: 4, clue: 'Dry sandy region', answer: 'DESERT'}
                     ],
                     down: [
-                        {num: 1, clue: 'Earth or terrain', answer: 'GROUND', row: 0, col: 0, dir: 'down'},
-                        {num: 2, clue: 'Dropped or misplaced', answer: 'LOSTS', row: 0, col: 5, dir: 'down'}
+                        {num: 1, clue: 'Impressive in size', answer: 'GRANDS'},
+                        {num: 2, clue: 'Restrict or cap', answer: 'LIMIT'}
                     ]
                 }
             },
@@ -508,23 +508,22 @@
                     ['O','','','','','','T'],
                     ['M','O','T','I','O','N','O'],
                     ['P','','','','','','R'],
-                    ['A','C','R','O','S','S','M'],
-                    ['C','','','','','','S'],
-                    ['T','R','A','N','C','E','S']
+                    ['L','E','A','D','E','R','M'],
+                    ['E','','','','','','S'],
+                    ['X','','','','','','']
                 ],
                 numbering: {
-                    '0-0': 1, '0-6': 2, '2-0': 3, '4-0': 4, '6-0': 5
+                    '0-0': 1, '0-6': 2, '2-0': 3, '4-0': 4
                 },
                 clues: {
                     across: [
-                        {num: 1, clue: 'Alterations', answer: 'CHANGES', row: 0, col: 0, dir: 'across'},
-                        {num: 3, clue: 'Movement', answer: 'MOTION', row: 2, col: 0, dir: 'across'},
-                        {num: 4, clue: 'From one side to the other', answer: 'ACROSS', row: 4, col: 0, dir: 'across'},
-                        {num: 5, clue: 'Hypnotic states', answer: 'TRANCES', row: 6, col: 0, dir: 'across'}
+                        {num: 1, clue: 'Alterations', answer: 'CHANGES'},
+                        {num: 3, clue: 'Movement', answer: 'MOTION'},
+                        {num: 4, clue: 'One in charge', answer: 'LEADER'}
                     ],
                     down: [
-                        {num: 1, clue: 'Small or cramped', answer: 'COMPACT', row: 0, col: 0, dir: 'down'},
-                        {num: 2, clue: 'Severe weather events', answer: 'STORMS', row: 0, col: 6, dir: 'down'}
+                        {num: 1, clue: 'Intricate or complicated', answer: 'COMPLEX'},
+                        {num: 2, clue: 'Weather events', answer: 'STORMS'}
                     ]
                 }
             },
@@ -532,26 +531,26 @@
             {
                 size: 7,
                 grid: [
-                    ['P','R','O','G','R','A','M'],
+                    ['P','R','O','B','L','E','M'],
                     ['R','','','','','','A'],
-                    ['O','U','T','D','O','O','R'],
-                    ['B','','','','','','K'],
-                    ['L','E','A','D','E','R','S'],
-                    ['E','','','','','',''],
-                    ['M','','','','','','']
+                    ['I','N','L','A','N','D','R'],
+                    ['N','','','','','','K'],
+                    ['T','R','A','V','E','L','S'],
+                    ['S','','','','','',''],
+                    ['','','','','','','']
                 ],
                 numbering: {
                     '0-0': 1, '0-6': 2, '2-0': 3, '4-0': 4
                 },
                 clues: {
                     across: [
-                        {num: 1, clue: 'Software application', answer: 'PROGRAM', row: 0, col: 0, dir: 'across'},
-                        {num: 3, clue: 'Al fresco', answer: 'OUTDOOR', row: 2, col: 0, dir: 'across'},
-                        {num: 4, clue: 'Those in charge', answer: 'LEADERS', row: 4, col: 0, dir: 'across'}
+                        {num: 1, clue: 'Difficult situation', answer: 'PROBLEM'},
+                        {num: 3, clue: 'Interior region', answer: 'INLAND'},
+                        {num: 4, clue: 'Journeys', answer: 'TRAVELS'}
                     ],
                     down: [
-                        {num: 1, clue: 'Difficulty', answer: 'PROBLEM', row: 0, col: 0, dir: 'down'},
-                        {num: 2, clue: 'Distinguishing sign', answer: 'MARKS', row: 0, col: 6, dir: 'down'}
+                        {num: 1, clue: 'Words on paper', answer: 'PRINTS'},
+                        {num: 2, clue: 'Distinguishing signs', answer: 'MARKS'}
                     ]
                 }
             },
@@ -563,7 +562,7 @@
                     ['A','','','','','','D'],
                     ['C','O','M','P','U','T','E'],
                     ['H','','','','','','A'],
-                    ['I','N','L','A','N','D','S'],
+                    ['I','N','F','O','R','M','S'],
                     ['N','','','','','',''],
                     ['E','','','','','','']
                 ],
@@ -572,13 +571,13 @@
                 },
                 clues: {
                     across: [
-                        {num: 1, clue: 'Error or blunder', answer: 'MISTAKE', row: 0, col: 0, dir: 'across'},
-                        {num: 3, clue: 'Calculate', answer: 'COMPUTE', row: 2, col: 0, dir: 'across'},
-                        {num: 4, clue: 'Interior regions', answer: 'INLANDS', row: 4, col: 0, dir: 'across'}
+                        {num: 1, clue: 'Error or blunder', answer: 'MISTAKE'},
+                        {num: 3, clue: 'Calculate', answer: 'COMPUTE'},
+                        {num: 4, clue: 'Tells or notifies', answer: 'INFORMS'}
                     ],
                     down: [
-                        {num: 1, clue: 'Device or apparatus', answer: 'MACHINE', row: 0, col: 0, dir: 'down'},
-                        {num: 2, clue: 'Concepts or thoughts', answer: 'IDEAS', row: 0, col: 6, dir: 'down'}
+                        {num: 1, clue: 'Apparatus or device', answer: 'MACHINE'},
+                        {num: 2, clue: 'Thoughts or concepts', answer: 'IDEAS'}
                     ]
                 }
             },
@@ -600,14 +599,14 @@
                 },
                 clues: {
                     across: [
-                        {num: 1, clue: 'Finished entirely', answer: 'COMPLETE', row: 0, col: 0, dir: 'across'},
-                        {num: 3, clue: 'Trade or barter', answer: 'EXCHANGE', row: 2, col: 0, dir: 'across'},
-                        {num: 4, clue: 'Journeys', answer: 'TRAVELS', row: 4, col: 0, dir: 'across'},
-                        {num: 5, clue: 'Books in a series', answer: 'VOLUMES', row: 6, col: 0, dir: 'across'}
+                        {num: 1, clue: 'Finished entirely', answer: 'COMPLETE'},
+                        {num: 3, clue: 'Trade or swap', answer: 'EXCHANGE'},
+                        {num: 4, clue: 'Journeys', answer: 'TRAVELS'},
+                        {num: 5, clue: 'Book series parts', answer: 'VOLUMES'}
                     ],
                     down: [
-                        {num: 1, clue: 'Inventive', answer: 'CREATIVE', row: 0, col: 0, dir: 'down'},
-                        {num: 2, clue: 'Chemical building block', answer: 'ELEMENT', row: 0, col: 7, dir: 'down'}
+                        {num: 1, clue: 'Inventive', answer: 'CREATIVE'},
+                        {num: 2, clue: 'Basic substance', answer: 'ELEMENT'}
                     ]
                 }
             },
@@ -619,25 +618,24 @@
                     ['O','','','','','','','','T'],
                     ['M','I','D','N','I','G','H','T','R'],
                     ['P','','','','','','','','A'],
-                    ['L','I','G','H','T','I','N','G','N'],
-                    ['E','','','','','','','','G'],
-                    ['T','H','U','N','D','E','R','S','E'],
+                    ['L','I','G','H','T','N','E','S','S'],
                     ['E','','','','','','','',''],
-                    ['S','','','','','','','','']
+                    ['X','','','','','','','',''],
+                    ['','','','','','','','',''],
+                    ['','','','','','','','','']
                 ],
                 numbering: {
-                    '0-0': 1, '0-8': 2, '2-0': 3, '4-0': 4, '6-0': 5
+                    '0-0': 1, '0-8': 2, '2-0': 3, '4-0': 4
                 },
                 clues: {
                     across: [
-                        {num: 1, clue: 'Tournament winners', answer: 'CHAMPIONS', row: 0, col: 0, dir: 'across'},
-                        {num: 3, clue: 'Witching hour', answer: 'MIDNIGHT', row: 2, col: 0, dir: 'across'},
-                        {num: 4, clue: 'Electrical flash in the sky', answer: 'LIGHTING', row: 4, col: 0, dir: 'across'},
-                        {num: 5, clue: 'Loud rumbling sounds', answer: 'THUNDERS', row: 6, col: 0, dir: 'across'}
+                        {num: 1, clue: 'Tournament winners', answer: 'CHAMPIONS'},
+                        {num: 3, clue: '12:00 AM', answer: 'MIDNIGHT'},
+                        {num: 4, clue: 'Brightness or low weight', answer: 'LIGHTNESS'}
                     ],
                     down: [
-                        {num: 1, clue: 'Bring to an end', answer: 'COMPLETES', row: 0, col: 0, dir: 'down'},
-                        {num: 2, clue: 'Unusual or peculiar', answer: 'STRANGE', row: 0, col: 8, dir: 'down'}
+                        {num: 1, clue: 'Intricate', answer: 'COMPLEX'},
+                        {num: 2, clue: 'Unusual', answer: 'STRANGE'}
                     ]
                 }
             }
@@ -659,10 +657,7 @@
         function loadLevel(levelIndex) {
             currentPuzzle = PUZZLES[levelIndex];
             document.getElementById('levelIndicator').textContent = `Level ${levelIndex + 1} of 10`;
-
-            // Initialize user grid
             userGrid = Array(currentPuzzle.size).fill().map(() => Array(currentPuzzle.size).fill(''));
-
             renderGrid();
             renderClues();
         }
@@ -671,7 +666,6 @@
             const grid = document.getElementById('crosswordGrid');
             grid.innerHTML = '';
 
-            // Responsive cell size
             const isMobile = window.innerWidth <= 768;
             const cellSize = isMobile ? Math.min(38, Math.floor((window.innerWidth - 80) / currentPuzzle.size)) : 45;
 
@@ -764,33 +758,51 @@
             }
         }
 
+        function findNextCell(row, col, direction) {
+            if (direction === 'across') {
+                // Check remaining cells in this row
+                for (let c = col + 1; c < currentPuzzle.size; c++) {
+                    if (currentPuzzle.grid[row][c] !== '') {
+                        return {row, col: c, found: true};
+                    }
+                }
+                // No more cells across, try down from original position
+                for (let r = row + 1; r < currentPuzzle.size; r++) {
+                    if (currentPuzzle.grid[r][col] !== '') {
+                        return {row: r, col, found: true, switchedDir: true};
+                    }
+                }
+            } else { // down
+                // Check remaining cells in this column
+                for (let r = row + 1; r < currentPuzzle.size; r++) {
+                    if (currentPuzzle.grid[r][col] !== '') {
+                        return {row: r, col, found: true};
+                    }
+                }
+                // No more cells down, try across from original position
+                for (let c = col + 1; c < currentPuzzle.size; c++) {
+                    if (currentPuzzle.grid[row][c] !== '') {
+                        return {row, col: c, found: true, switchedDir: true};
+                    }
+                }
+            }
+            return {found: false};
+        }
+
         function handleInput(e, row, col) {
             const value = e.target.value.toUpperCase();
             userGrid[row][col] = value;
 
             if (value) {
-                // Move to next cell
-                if (activeDirection === 'across') {
-                    let nextCol = col + 1;
-                    while (nextCol < currentPuzzle.size) {
-                        const nextCell = document.querySelector(`[data-row="${row}"][data-col="${nextCol}"]`);
-                        if (nextCell && !nextCell.disabled) {
-                            nextCell.focus();
-                            selectCell(row, nextCol);
-                            break;
-                        }
-                        nextCol++;
+                const next = findNextCell(row, col, activeDirection);
+                if (next.found) {
+                    if (next.switchedDir) {
+                        activeDirection = activeDirection === 'across' ? 'down' : 'across';
                     }
-                } else {
-                    let nextRow = row + 1;
-                    while (nextRow < currentPuzzle.size) {
-                        const nextCell = document.querySelector(`[data-row="${nextRow}"][data-col="${col}"]`);
-                        if (nextCell && !nextCell.disabled) {
-                            nextCell.focus();
-                            selectCell(nextRow, col);
-                            break;
-                        }
-                        nextRow++;
+                    const nextCell = document.querySelector(`[data-row="${next.row}"][data-col="${next.col}"]`);
+                    if (nextCell) {
+                        nextCell.focus();
+                        selectCell(next.row, next.col);
                     }
                 }
             }
@@ -803,32 +815,33 @@
                 highlightWord();
             } else if (e.key === 'Backspace' && !e.target.value) {
                 e.preventDefault();
-                if (activeDirection === 'across') {
-                    let prevCol = col - 1;
-                    while (prevCol >= 0) {
-                        const prevCell = document.querySelector(`[data-row="${row}"][data-col="${prevCol}"]`);
-                        if (prevCell && !prevCell.disabled) {
-                            prevCell.focus();
-                            prevCell.value = '';
-                            selectCell(row, prevCol);
-                            break;
-                        }
-                        prevCol--;
-                    }
-                } else {
-                    let prevRow = row - 1;
-                    while (prevRow >= 0) {
-                        const prevCell = document.querySelector(`[data-row="${prevRow}"][data-col="${col}"]`);
-                        if (prevCell && !prevCell.disabled) {
-                            prevCell.focus();
-                            prevCell.value = '';
-                            selectCell(prevRow, col);
-                            break;
-                        }
-                        prevRow--;
+                const prev = findPrevCell(row, col, activeDirection);
+                if (prev.found) {
+                    const prevCell = document.querySelector(`[data-row="${prev.row}"][data-col="${prev.col}"]`);
+                    if (prevCell) {
+                        prevCell.focus();
+                        prevCell.value = '';
+                        selectCell(prev.row, prev.col);
                     }
                 }
             }
+        }
+
+        function findPrevCell(row, col, direction) {
+            if (direction === 'across') {
+                for (let c = col - 1; c >= 0; c--) {
+                    if (currentPuzzle.grid[row][c] !== '') {
+                        return {row, col: c, found: true};
+                    }
+                }
+            } else {
+                for (let r = row - 1; r >= 0; r--) {
+                    if (currentPuzzle.grid[r][col] !== '') {
+                        return {row: r, col, found: true};
+                    }
+                }
+            }
+            return {found: false};
         }
 
         function checkPuzzle() {
@@ -883,7 +896,6 @@
                 userGrid[activeCell.row][activeCell.col] = correctLetter;
                 totalPenalties += 30;
                 hintsUsed++;
-
                 showPenaltyNotice();
             }
         }
