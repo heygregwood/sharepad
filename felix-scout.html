@@ -147,10 +147,28 @@
         }
 
         .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            display: flex;
             gap: 20px;
             margin-bottom: 30px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            padding: 10px 0;
+        }
+
+        .photo-grid::-webkit-scrollbar {
+            height: 12px;
+        }
+
+        .photo-grid::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+        }
+
+        .photo-grid::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 6px;
         }
 
         .photo-item {
@@ -159,11 +177,13 @@
             border-radius: 15px;
             overflow: hidden;
             border: 3px solid var(--gold);
+            flex-shrink: 0;
+            width: 300px;
         }
 
         .photo-item img {
-            width: 100%;
-            height: 250px;
+            width: 300px;
+            height: 300px;
             object-fit: cover;
             display: block;
         }
@@ -290,6 +310,15 @@
             .scan-btn {
                 font-size: 2em;
                 height: 120px;
+            }
+
+            .photo-item {
+                width: 250px;
+            }
+
+            .photo-item img {
+                width: 250px;
+                height: 250px;
             }
 
             .reminder-banner {
@@ -432,19 +461,46 @@
 
         function handlePhoto(event) {
             const file = event.target.files[0];
-            if (!file) return;
+            if (!file) {
+                console.log('No file selected');
+                return;
+            }
+
+            console.log('Photo captured, file size:', file.size);
+
+            // Show loading feedback
+            const scanBtn = document.querySelector('.scan-btn');
+            const originalText = scanBtn.textContent;
+            scanBtn.textContent = '⏳ PROCESSING...';
+            scanBtn.disabled = true;
 
             const reader = new FileReader();
+
+            reader.onerror = function(error) {
+                console.error('FileReader error:', error);
+                alert('Error reading photo. Please try again!');
+                scanBtn.textContent = originalText;
+                scanBtn.disabled = false;
+            };
+
             reader.onload = function(e) {
+                console.log('Photo loaded, data length:', e.target.result.length);
+
                 if (photos.length < MAX_PHOTOS) {
                     photos.push(e.target.result);
+                    console.log('Photo added, total photos:', photos.length);
                     savePhotos();
                     renderPhotos();
                     updateProgress();
                     playScannerBeep();
                     checkVictory();
                 }
+
+                // Re-enable button
+                scanBtn.textContent = originalText;
+                scanBtn.disabled = false;
             };
+
             reader.readAsDataURL(file);
 
             // Reset input so same photo can be taken again
