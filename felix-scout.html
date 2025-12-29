@@ -427,7 +427,18 @@
 
         // Save photos to localStorage
         function savePhotos() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(photos));
+            try {
+                const dataToSave = JSON.stringify(photos);
+                localStorage.setItem(STORAGE_KEY, dataToSave);
+
+                // Verify it was saved
+                const verify = localStorage.getItem(STORAGE_KEY);
+                const verifyCount = verify ? JSON.parse(verify).length : 0;
+                showDebug(`💾 Saved! Verified ${verifyCount} photos in storage`);
+            } catch (e) {
+                showDebug(`❌ SAVE FAILED: ${e.message}`);
+                alert('Failed to save photo! Storage might be full.');
+            }
         }
 
         // Scanner beep sound (Base64 encoded beep)
@@ -559,7 +570,11 @@
             const count = photos.length;
             const percentage = (count / MAX_PHOTOS) * 100;
 
-            showDebug(`📊 Update: ${count}/${MAX_PHOTOS} = ${percentage}%`);
+            // Check what's actually in localStorage
+            const stored = localStorage.getItem(STORAGE_KEY);
+            const storedCount = stored ? JSON.parse(stored).length : 0;
+
+            showDebug(`📊 ARRAY: ${count} photos | STORAGE: ${storedCount} photos`);
 
             document.getElementById('counter').textContent = `🦎 ${count}/${MAX_PHOTOS} SALAMANDERS`;
             document.getElementById('progressBar').style.width = percentage + '%';
@@ -596,7 +611,17 @@
             });
         }
 
+        // Detect page reloads
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                showDebug('⚠️ PAGE RESTORED FROM CACHE');
+                loadPhotos();
+            }
+        });
+
         // Initialize on load
+        const pageLoadTime = new Date().toLocaleTimeString();
+        showDebug(`🔄 Page loaded at ${pageLoadTime}`);
         loadPhotos();
     </script>
 </body>
