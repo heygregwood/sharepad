@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gug Games - Tulum Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --sand: #F5F5DC;
+            --jungle-green: #2D5A27;
+            --terracotta: #C04000;
+            --charcoal: #2C2C2C;
+            --light-sand: #FAF8F3;
+            --dark-green: #1a3a1a;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--charcoal);
+            background: linear-gradient(135deg, var(--light-sand) 0%, var(--sand) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Decorative palm shadows */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath d='M100 20c-10 20-20 40-15 60 5 20 15 30 15 50s-5 40-5 50c0 0 10-30 20-50s15-35 10-60c-5-25-15-40-25-50z' fill='%232D5A27' opacity='0.08'/%3E%3C/svg%3E") no-repeat;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--jungle-green), var(--terracotta), var(--jungle-green));
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            color: var(--jungle-green);
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: var(--terracotta);
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .timer-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .timer {
+            font-size: 3.5em;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            color: var(--jungle-green);
+            margin: 15px 0;
+            letter-spacing: 2px;
+        }
+
+        .timer.warning {
+            color: var(--terracotta);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .start-btn, .return-btn {
+            background: linear-gradient(135deg, var(--jungle-green), var(--dark-green));
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(45, 90, 39, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .start-btn:hover, .return-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(45, 90, 39, 0.4);
+        }
+
+        .start-btn:active, .return-btn:active {
+            transform: translateY(0);
+        }
+
+        .rules {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--terracotta);
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        }
+
+        .rules h3 {
+            color: var(--jungle-green);
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+
+        .rules ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .rules li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .rules li::before {
+            content: '🌿';
+            position: absolute;
+            left: 0;
+        }
+
+        .phase {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            border-top: 3px solid var(--jungle-green);
+            transition: all 0.3s ease;
+        }
+
+        .phase:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .phase-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--terracotta), #a03500);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            flex-shrink: 0;
+        }
+
+        .phase h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--jungle-green);
+            font-size: 1.8em;
+            margin: 0;
+        }
+
+        .task-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .task-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.05em;
+            color: var(--charcoal);
+        }
+
+        .task-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--jungle-green);
+            font-weight: 700;
+            font-size: 1.3em;
+        }
+
+        .task-instruction {
+            background: var(--light-sand);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 3px solid var(--terracotta);
+            font-style: italic;
+        }
+
+        .success-screen {
+            display: none;
+            text-align: center;
+            background: white;
+            padding: 50px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.15);
+        }
+
+        .success-screen.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .success-screen h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--jungle-green);
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .success-screen p {
+            font-size: 1.2em;
+            color: var(--charcoal);
+            margin-bottom: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .timer {
+                font-size: 2.5em;
+            }
+
+            .phase {
+                padding: 20px;
+            }
+
+            .phase h2 {
+                font-size: 1.4em;
+            }
+
+            .start-btn, .return-btn {
+                padding: 15px 35px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>THE GUG GAMES</h1>
+            <div class="subtitle">Tulum Edition</div>
+            <p style="color: var(--charcoal); font-size: 0.95em; margin-top: 10px;">10 Minutes. 3 Tasks. One Winner.</p>
+        </header>
+
+        <div id="gameContent">
+            <div class="timer-section">
+                <div style="font-size: 0.9em; color: var(--charcoal); margin-bottom: 5px;">MISSION TIMER</div>
+                <div class="timer" id="timer">10:00</div>
+                <button class="start-btn" id="startBtn" onclick="startMission()">ACTIVATE MISSION</button>
+            </div>
+
+            <div class="rules">
+                <h3>THE RULES</h3>
+                <ul>
+                    <li>Do not run in hallways or slippery areas</li>
+                    <li>You must complete all three tasks before returning to the Judge</li>
+                    <li>The first person to show the Judge all completed items/photos wins</li>
+                </ul>
+            </div>
+
+            <div class="phase">
+                <div class="phase-header">
+                    <div class="phase-number">1</div>
+                    <h2>Visual ID</h2>
+                </div>
+                <p style="margin-bottom: 15px; font-weight: 500;">Find and take a photo of the following three things:</p>
+                <ul class="task-list">
+                    <li>Something that is older than you</li>
+                    <li>A sign with the letter 'Q' or 'Z' on it</li>
+                    <li>A reflection of yourself in something that isn't a mirror</li>
+                </ul>
+            </div>
+
+            <div class="phase">
+                <div class="phase-header">
+                    <div class="phase-number">2</div>
+                    <h2>The Intel</h2>
+                </div>
+                <p style="margin-bottom: 15px; font-weight: 500;">Gather information by asking questions:</p>
+                <ul class="task-list">
+                    <li>Ask a member of the staff (or a nearby adult) what their favorite Mexican snack is</li>
+                    <li>Find out the name of the nearest Cenote</li>
+                </ul>
+                <div class="task-instruction">
+                    💡 Be polite and introduce yourself as "Agent on a scavenger hunt"
+                </div>
+            </div>
+
+            <div class="phase">
+                <div class="phase-header">
+                    <div class="phase-number">3</div>
+                    <h2>Retrieval</h2>
+                </div>
+                <p style="margin-bottom: 15px; font-weight: 500;">Find and bring back these physical items:</p>
+                <ul class="task-list">
+                    <li>A leaf that looks like an animal (you must explain which one)</li>
+                    <li>A perfectly round stone</li>
+                </ul>
+                <div class="task-instruction">
+                    🌿 Remember: Leave no trace. Only collect items from the ground.
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.06);">
+                <p style="font-size: 1.1em; color: var(--charcoal); margin-bottom: 20px; font-weight: 500;">Once all 3 tasks are complete:</p>
+                <button class="return-btn" onclick="showSuccess()">RETURN TO JUDGE</button>
+            </div>
+        </div>
+
+        <div id="successScreen" class="success-screen">
+            <div class="success-icon">🏆</div>
+            <h2>MISSION COMPLETE!</h2>
+            <p>Show the Judge all your evidence:</p>
+            <div style="text-align: left; max-width: 400px; margin: 0 auto 30px auto; background: var(--light-sand); padding: 20px; border-radius: 10px;">
+                <div style="margin-bottom: 10px;">✓ Photos (Visual ID)</div>
+                <div style="margin-bottom: 10px;">✓ Intel answers</div>
+                <div>✓ Physical items</div>
+            </div>
+            <p style="font-size: 1em; color: var(--terracotta);">Time: <span id="finalTime">--:--</span></p>
+            <button class="start-btn" onclick="resetGame()" style="margin-top: 20px;">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        let timeLeft = 600; // 10 minutes in seconds
+        let timerInterval;
+        let startTime;
+
+        function startMission() {
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('startBtn').textContent = 'MISSION ACTIVE';
+            document.getElementById('startBtn').style.opacity = '0.5';
+            startTime = Date.now();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Time is up! Return to the Judge now!');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = display;
+
+            if (timeLeft <= 60) {
+                timerElement.classList.add('warning');
+            }
+        }
+
+        function showSuccess() {
+            clearInterval(timerInterval);
+            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
+            document.getElementById('finalTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            document.getElementById('gameContent').classList.add('hidden');
+            document.getElementById('successScreen').classList.add('active');
+        }
+
+        function resetGame() {
+            timeLeft = 600;
+            clearInterval(timerInterval);
+            document.getElementById('timer').textContent = '10:00';
+            document.getElementById('timer').classList.remove('warning');
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').textContent = 'ACTIVATE MISSION';
+            document.getElementById('startBtn').style.opacity = '1';
+            document.getElementById('gameContent').classList.remove('hidden');
+            document.getElementById('successScreen').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
