@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Susie Games - Player View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --amelia-color: #FF6B9D;
+            --leland-color: #4ECDC4;
+            --susie-color: #FFD93D;
+            --dark: #2C3E50;
+            --active-game: #2ecc71;
+        }
+
+        body {
+            font-family: 'Arial Black', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 20px;
+            border: 4px solid var(--susie-color);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: var(--susie-color);
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: white;
+        }
+
+        .player-names {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            font-size: 1.5em;
+        }
+
+        .player-names span:first-child {
+            color: var(--amelia-color);
+        }
+
+        .player-names span:last-child {
+            color: var(--leland-color);
+        }
+
+        .game-selector {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .game-selector label {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .game-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .game-select-btn {
+            padding: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border: 3px solid white;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .game-select-btn.active {
+            background: var(--active-game);
+            border-color: var(--active-game);
+            transform: scale(1.05);
+        }
+
+        .game-select-btn:active {
+            transform: scale(0.95);
+        }
+
+        .game-card {
+            display: none;
+            background: rgba(255,255,255,0.95);
+            color: var(--dark);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 4px solid var(--susie-color);
+            animation: slideIn 0.3s ease;
+        }
+
+        .game-card.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .game-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--susie-color);
+        }
+
+        .game-number {
+            background: var(--susie-color);
+            color: var(--dark);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .game-title {
+            font-size: 2em;
+        }
+
+        .instructions {
+            background: rgba(255,217,61,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        .instructions h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .instructions ul, .instructions ol {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .instructions strong {
+            color: #e74c3c;
+        }
+
+        .timer-section {
+            background: rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .timer-display {
+            font-size: 5em;
+            font-weight: bold;
+            color: var(--dark);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-display.warning {
+            color: #e74c3c;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .timer-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .timer-btn {
+            padding: 20px 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+
+        .start-btn {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .stop-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .reset-btn {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .timer-btn:active {
+            transform: scale(0.95);
+        }
+
+        .timer-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .no-timer {
+            font-size: 1.3em;
+            color: var(--dark);
+            padding: 20px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
+
+        .tips {
+            background: rgba(46, 204, 113, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 5px solid #2ecc71;
+        }
+
+        .tips h4 {
+            color: #27ae60;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .game-title {
+                font-size: 1.5em;
+            }
+
+            .timer-display {
+                font-size: 3.5em;
+            }
+
+            .game-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .timer-buttons {
+                flex-direction: column;
+            }
+
+            .timer-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 THE SUSIE GAMES 🎮</h1>
+            <p class="subtitle">Player View</p>
+            <div class="player-names">
+                <span>AMELIA</span>
+                <span>vs</span>
+                <span>LELAND</span>
+            </div>
+        </header>
+
+        <div class="game-selector">
+            <label>Select Current Game:</label>
+            <div class="game-buttons">
+                <button class="game-select-btn active" onclick="showGame(1)">Game 1<br>🪨 Rocks</button>
+                <button class="game-select-btn" onclick="showGame(2)">Game 2<br>🌈 Colors</button>
+                <button class="game-select-btn" onclick="showGame(3)">Game 3<br>🐌 Slime</button>
+                <button class="game-select-btn" onclick="showGame(4)">Game 4<br>🔍 Evidence</button>
+            </div>
+        </div>
+
+        <!-- GAME 1 -->
+        <div class="game-card active" id="game1">
+            <div class="game-header">
+                <div class="game-number">1</div>
+                <div class="game-title">🪨 Rock Stack Challenge</div>
+            </div>
+
+            <div class="instructions">
+                <h3>📋 How to Play:</h3>
+                <ol>
+                    <li><strong>Collection Phase:</strong> When Susie starts the timer, you have limited time to collect as many rocks as you can find</li>
+                    <li><strong>Stacking Phase:</strong> You get 3 tries to stack your rocks as high as possible</li>
+                    <li><strong>Scoring:</strong> Your highest stack counts - Susie counts the rocks</li>
+                    <li><strong>Bonus Points:</strong> If your stack stays up for 30 seconds, you get +5 points!</li>
+                </ol>
+            </div>
+
+            <div class="tips">
+                <h4>💡 Pro Tips:</h4>
+                <ul>
+                    <li>Look for flat rocks - they stack better!</li>
+                    <li>Start with bigger rocks on the bottom</li>
+                    <li>Take your time - rushing makes stacks fall</li>
+                </ul>
+            </div>
+
+            <div class="timer-section">
+                <h3>Collection Timer</h3>
+                <div class="timer-display" id="timer1">5:00</div>
+                <div class="timer-buttons">
+                    <button class="timer-btn start-btn" onclick="startTimer(1, 300)">Start 5 Min</button>
+                    <button class="timer-btn stop-btn" onclick="stopTimer(1)">Stop</button>
+                    <button class="timer-btn reset-btn" onclick="resetTimer(1, 300)">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME 2 -->
+        <div class="game-card" id="game2">
+            <div class="game-header">
+                <div class="game-number">2</div>
+                <div class="game-title">🌈 Color Hunt</div>
+            </div>
+
+            <div class="instructions">
+                <h3>📋 How to Play:</h3>
+                <ul>
+                    <li><strong>Goal:</strong> Find natural objects in these specific colors:</li>
+                    <li style="margin-left: 40px;">🔴 <strong>RED</strong></li>
+                    <li style="margin-left: 40px;">⚫ <strong>BLACK</strong></li>
+                    <li style="margin-left: 40px;">⚪ <strong>WHITE</strong></li>
+                    <li style="margin-left: 40px;">🔵 <strong>BLUE</strong></li>
+                    <li style="margin-left: 40px;">🟢 <strong>GREEN</strong></li>
+                    <li style="margin-left: 40px;">🟡 <strong>YELLOW</strong></li>
+                    <li><strong>Rule:</strong> Objects must fit in the palm of your hand</li>
+                    <li><strong>Scoring:</strong> 5 points per color found</li>
+                    <li><strong>BONUS:</strong> Find ALL 6 colors for +10 bonus points (40 total!)</li>
+                </ul>
+            </div>
+
+            <div class="tips">
+                <h4>💡 Pro Tips:</h4>
+                <ul>
+                    <li>Flowers are great for colors!</li>
+                    <li>Don't forget leaves can be different colors</li>
+                    <li>Rocks and dirt count for black/white/brown</li>
+                    <li>Look for berries for red/blue</li>
+                </ul>
+            </div>
+
+            <div class="timer-section">
+                <div class="no-timer">⏱️ No timer for this game - take your time and find all the colors!</div>
+            </div>
+        </div>
+
+        <!-- GAME 3 -->
+        <div class="game-card" id="game3">
+            <div class="game-header">
+                <div class="game-number">3</div>
+                <div class="game-title">🐌 Slime Time</div>
+            </div>
+
+            <div class="instructions">
+                <h3>📋 How to Play:</h3>
+                <ul>
+                    <li><strong>Time Limit:</strong> 8 minutes to find slimy things</li>
+                    <li><strong>Goal:</strong> Find the SLIMIEST natural things you can!</li>
+                    <li><strong>What to Look For:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Slugs 🐌</li>
+                            <li>Snails 🐚</li>
+                            <li>Wet moss or algae</li>
+                            <li>Slimy rocks (near water)</li>
+                            <li>Mud</li>
+                            <li>Slime mold</li>
+                        </ul>
+                    </li>
+                    <li><strong>THE RULE:</strong> You MUST touch each item to prove it's slimy! 🤢</li>
+                    <li><strong>Scoring:</strong> 3 points per slimy item</li>
+                    <li><strong>Bonus:</strong> Susie judges the SLIMIEST - winner gets +10 points!</li>
+                </ul>
+            </div>
+
+            <div class="tips">
+                <h4>💡 Pro Tips:</h4>
+                <ul>
+                    <li>Check near water for extra slime!</li>
+                    <li>Under rocks and logs are great hiding spots</li>
+                    <li>Wet = more likely to be slimy</li>
+                    <li>Don't be scared - it's just nature! 😄</li>
+                </ul>
+            </div>
+
+            <div class="timer-section">
+                <h3>Slime Hunt Timer</h3>
+                <div class="timer-display" id="timer3">8:00</div>
+                <div class="timer-buttons">
+                    <button class="timer-btn start-btn" onclick="startTimer(3, 480)">Start 8 Min</button>
+                    <button class="timer-btn stop-btn" onclick="stopTimer(3)">Stop</button>
+                    <button class="timer-btn reset-btn" onclick="resetTimer(3, 480)">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME 4 -->
+        <div class="game-card" id="game4">
+            <div class="game-header">
+                <div class="game-number">4</div>
+                <div class="game-title">🔍 Evidence Hunter</div>
+            </div>
+
+            <div class="instructions">
+                <h3>📋 How to Play:</h3>
+                <ul>
+                    <li><strong>Time Limit:</strong> 10 minutes to find evidence</li>
+                    <li><strong>Goal:</strong> Find evidence of animals, plants, or weather in nature</li>
+                    <li><strong>What to Look For:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>🐾 Animal tracks or footprints</li>
+                            <li>🍃 Chewed or damaged leaves</li>
+                            <li>💩 Animal scat (poop)</li>
+                            <li>🌰 Eaten nuts or seeds</li>
+                            <li>🪺 Nests or feathers</li>
+                            <li>🪨 Erosion or weathering on rocks</li>
+                            <li>🍂 Decomposing plants</li>
+                            <li>🌱 New plant growth</li>
+                        </ul>
+                    </li>
+                    <li><strong>Scoring:</strong> 3 points per piece of evidence</li>
+                    <li><strong>BONUS:</strong> +5 points if you can explain WHAT caused it and HOW!</li>
+                </ul>
+            </div>
+
+            <div class="tips">
+                <h4>💡 Pro Tips:</h4>
+                <ul>
+                    <li>Look carefully - evidence can be small!</li>
+                    <li>Think like a scientist - what made this mark?</li>
+                    <li>Under logs and rocks often have lots of evidence</li>
+                    <li>Be ready to explain your evidence to Susie!</li>
+                </ul>
+            </div>
+
+            <div class="timer-section">
+                <h3>Evidence Hunt Timer</h3>
+                <div class="timer-display" id="timer4">10:00</div>
+                <div class="timer-buttons">
+                    <button class="timer-btn start-btn" onclick="startTimer(4, 600)">Start 10 Min</button>
+                    <button class="timer-btn stop-btn" onclick="stopTimer(4)">Stop</button>
+                    <button class="timer-btn reset-btn" onclick="resetTimer(4, 600)">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let timers = {
+            1: { interval: null, seconds: 300, initial: 300 },
+            3: { interval: null, seconds: 480, initial: 480 },
+            4: { interval: null, seconds: 600, initial: 600 }
+        };
+
+        function showGame(gameNum) {
+            // Hide all game cards
+            document.querySelectorAll('.game-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            // Remove active from all buttons
+            document.querySelectorAll('.game-select-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected game
+            document.getElementById(`game${gameNum}`).classList.add('active');
+
+            // Highlight selected button
+            event.target.classList.add('active');
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateDisplay(gameNum) {
+            const display = document.getElementById(`timer${gameNum}`);
+            const seconds = timers[gameNum].seconds;
+            display.textContent = formatTime(seconds);
+
+            // Add warning class if under 60 seconds
+            if (seconds <= 60 && seconds > 0) {
+                display.classList.add('warning');
+            } else {
+                display.classList.remove('warning');
+            }
+        }
+
+        function startTimer(gameNum, initialSeconds) {
+            // If timer doesn't exist for this game, return
+            if (!timers[gameNum]) return;
+
+            // Stop any existing timer
+            stopTimer(gameNum);
+
+            // Start countdown
+            timers[gameNum].interval = setInterval(() => {
+                timers[gameNum].seconds--;
+                updateDisplay(gameNum);
+
+                // Play sound at 10 seconds
+                if (timers[gameNum].seconds === 10) {
+                    playBeep(800, 0.2);
+                }
+
+                // Stop at 0
+                if (timers[gameNum].seconds <= 0) {
+                    stopTimer(gameNum);
+                    playBeep(400, 0.5);
+                    setTimeout(() => playBeep(400, 0.5), 200);
+                    alert('⏰ TIME\'S UP!');
+                }
+            }, 1000);
+        }
+
+        function stopTimer(gameNum) {
+            if (timers[gameNum] && timers[gameNum].interval) {
+                clearInterval(timers[gameNum].interval);
+                timers[gameNum].interval = null;
+            }
+        }
+
+        function resetTimer(gameNum, seconds) {
+            stopTimer(gameNum);
+            timers[gameNum].seconds = seconds || timers[gameNum].initial;
+            updateDisplay(gameNum);
+        }
+
+        function playBeep(frequency, duration) {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            } catch (e) {
+                // Audio not supported, silent fail
+            }
+        }
+
+        // Initialize displays
+        updateDisplay(1);
+        updateDisplay(3);
+        updateDisplay(4);
+    </script>
+</body>
+</html>
