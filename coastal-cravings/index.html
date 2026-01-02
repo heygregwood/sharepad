@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coastal Cravings: AI-Powered Tulum 2026 Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ink: #1E293B;
+            --paper: #FFFCF5;
+            --rose: #F43F5E;
+            --teal: #0D9488;
+            --amber: #F59E0B;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+            color: var(--ink);
+        }
+
+        .sketch-font { font-family: 'Gochi+Hand', cursive; }
+        .header-font { font-family: 'Montserrat', sans-serif; }
+
+        .journal-container {
+            background-color: var(--paper);
+            background-image: radial-gradient(rgba(30, 41, 59, 0.05) 1px, transparent 1px);
+            background-size: 25px 25px;
+            border: 2px solid var(--ink);
+            border-radius: 4px 15px 4px 15px / 15px 4px 15px 4px;
+            box-shadow: 15px 15px 0px rgba(30, 41, 59, 0.1);
+        }
+
+        #map { 
+            height: 500px; 
+            border: 3px solid var(--ink); 
+            border-radius: 12px;
+            background: #e2e8f0;
+        }
+
+        .watercolor-sketch {
+            position: relative;
+            overflow: hidden;
+            background: #f8fafc;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .watercolor-sketch img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.15) saturate(1.4) brightness(1.05) sepia(0.15) blur(0.2px);
+            mix-blend-mode: multiply;
+            display: block;
+        }
+
+        .watercolor-sketch canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .watercolor-sketch::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            opacity: 0.4;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .btn-hand {
+            border: 2px solid var(--ink);
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-hand:hover {
+            transform: scale(1.03) rotate(-1deg);
+            box-shadow: 5px 5px 0px var(--ink);
+        }
+
+        .chart-container { position: relative; width: 100%; height: 280px; }
+
+        .custom-marker {
+            background: white; border: 2px solid var(--ink); border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg); display: flex; align-items: center; justify-content: center;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+        }
+        .marker-icon-box { transform: rotate(45deg); }
+
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+    </style>
+</head>
+<body class="pb-20">
+
+    <header class="bg-teal-900 text-white py-24 px-6 text-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%); background-size: 15px 15px;"></div>
+        <h1 class="header-font text-6xl md:text-9xl font-black mb-4 uppercase tracking-tighter leading-tight">Coastal Cravings</h1>
+        <p class="text-xl md:text-2xl font-light tracking-[0.4em] uppercase opacity-70">2026 AI-Powered Tulum Beachfront Guide</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 -mt-12 relative z-10 space-y-16">
+
+        <!-- AI Lunch Concierge -->
+        <section class="journal-container p-8 md:p-12">
+            <h2 class="text-4xl sketch-font text-rose-600 mb-2">✨ AI Lunch Concierge</h2>
+            <p class="text-gray-500 italic mb-8">Tell us your mood or group needs (e.g., "Romantic table with sunset views", "A lively spot for a big group with great cocktails").</p>
+            
+            <div class="flex flex-col md:flex-row gap-4">
+                <input id="ai-query" type="text" placeholder="I'm feeling like a fresh acai bowl in a quiet garden..." class="flex-grow p-4 border-2 border-ink bg-white sketch-font text-xl rounded">
+                <button onclick="callConcierge()" id="concierge-btn" class="px-8 py-4 bg-rose-600 text-white font-bold sketch-font text-2xl btn-hand shadow-lg min-w-[200px]">
+                    Ask Gemini ✨
+                </button>
+            </div>
+
+            <div id="ai-response" class="hidden mt-8 p-6 bg-white border-2 border-dashed border-rose-400 rounded-xl flex flex-col md:flex-row items-center gap-6 animate-fade-in">
+                <!-- Injected result -->
+            </div>
+        </section>
+
+        <!-- Interactive Coastline Map -->
+        <section class="journal-container p-4">
+            <h3 class="text-3xl sketch-font mb-4 px-4">📍 Tulum Beachfront Trail</h3>
+            <div id="map"></div>
+        </section>
+
+        <!-- Discovery Grid -->
+        <section id="discovery-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        </section>
+
+        <!-- Analytics -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-10 pb-12">
+            <div class="journal-container p-8">
+                <h3 class="text-3xl sketch-font mb-6">Lunch Investment Comparison ($ USD)</h3>
+                <div class="chart-container"><canvas id="costChart"></canvas></div>
+            </div>
+            <div class="journal-container p-8">
+                <h3 class="text-3xl sketch-font mb-6">Atmosphere Spectrum Matrix</h3>
+                <div class="chart-container"><canvas id="vibeChart"></canvas></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Detailed Modal -->
+    <div id="modal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md">
+        <div class="journal-container max-w-5xl w-full max-h-[90vh] overflow-y-auto p-10 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-6 text-5xl sketch-font hover:text-rose-500">×</button>
+            <div id="modal-content" class="grid grid-cols-1 md:grid-cols-2 gap-12"></div>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = ""; 
+        
+        const SPOTS = [
+            { id: 'ziggys', name: "Ziggy's Restaurant", type: "Premium Dining", price: 65, lat: 20.1652, lng: -87.4589, color: '#0D9488', icon: 'knife', img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800", url: "https://ziggybeachtulum.com/restaurant/", menu: ["Tuna Nachos w/ Habanero Aioli", "Octopus Zarandeado", "Lobster Tail"], vibe: "Sophisticated Comfort", desc: "Best overall lunch experience. Impeccable service meets high-quality Caribbean seafood at a perfectly set table." },
+            { id: 'ppp', name: "Papaya Playa Project", type: "Social Vibe", price: 95, lat: 20.1789, lng: -87.4478, color: '#F43F5E', icon: 'party', img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800", url: "https://www.papayaplayaproject.com/beach-club", menu: ["Tropical Ceviche", "Grilled Catch of the Day", "Organic Green Salad"], vibe: "High-Energy Boho", desc: "A sensory hive where music meets the sand. Iconic architecture and curated cocktails define the experience." },
+            { id: 'posada', name: "Posada Margherita", type: "Rustic Italian", price: 80, lat: 20.1712, lng: -87.4542, color: '#8B5CF6', icon: 'pasta', img: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=800", url: "https://www.posadamargherita.com/", menu: ["Gamberi e Zucchine Pasta", "Burrata & Focaccia Plate", "Italian Wine Selection"], vibe: "Timeless Simplicity", desc: "A rustic sanctuary of Italian charm. Fresh pasta and wine served in a stunningly weathered beachfront villa." },
+            { id: 'rawlove', name: "Raw Love", type: "Superfood", price: 30, lat: 20.1695, lng: -87.4555, color: '#10B981', icon: 'bowl', img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800", url: "https://ahaucollection.com/raw-love/", menu: ["Tropical Acai Bowl", "Zucchini Pesto Pasta", "Wellness Immunity Shots"], vibe: "Zen Grounding", desc: "A healthy oasis inside Ahau. Ground yourself with vibrant, plant-based superfoods under the jungle canopy." },
+            { id: 'eufemia', name: "La Eufemia", type: "Casual Eats", price: 20, lat: 20.1610, lng: -87.4610, color: '#F59E0B', icon: 'taco', img: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=800", url: "https://www.facebook.com/taquerialaeufemia/", menu: ["Fried Fish Tacos", "Shrimp Taco w/ Pineapple", "Classic Mezcalita"], vibe: "Punk Beach Spirit", desc: "Tacos, cold beer, and zero pretension. The last bastion of authentic fun on the Tulum beach road." }
+        ];
+
+        // --- PROCEDURAL WATERCOLOR IMAGE FALLBACK ---
+        function drawVenueFallback(canvasId, spotName, color = "#0D9488") {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Background Wash
+            ctx.fillStyle = "#FFFCF5";
+            ctx.fillRect(0, 0, w, h);
+            
+            // Ocean Wash
+            ctx.globalAlpha = 0.3;
+            ctx.fillStyle = "#A5F3FC";
+            ctx.beginPath();
+            ctx.moveTo(0, h * 0.4);
+            ctx.bezierCurveTo(w * 0.3, h * 0.3, w * 0.6, h * 0.5, w, h * 0.4);
+            ctx.lineTo(w, 0);
+            ctx.lineTo(0, 0);
+            ctx.fill();
+
+            // Sand Wash
+            ctx.fillStyle = "#FEF3C7";
+            ctx.fillRect(0, h * 0.4, w, h * 0.6);
+
+            // Sketching the Table
+            ctx.globalAlpha = 1.0;
+            ctx.strokeStyle = "#1E293B";
+            ctx.lineWidth = 2;
+            ctx.lineCap = "round";
+
+            const s = (x1, y1, x2, y2) => {
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.quadraticCurveTo((x1+x2)/2 + (Math.random()*6-3), (y1+y2)/2 + (Math.random()*6-3), x2, y2);
+                ctx.stroke();
+            };
+
+            // Table Surface
+            s(w * 0.1, h * 0.9, w * 0.9, h * 0.9);
+            s(w * 0.1, h * 0.9, w * 0.2, h * 0.7);
+            s(w * 0.9, h * 0.9, w * 0.8, h * 0.7);
+            s(w * 0.2, h * 0.7, w * 0.8, h * 0.7);
+
+            // Wine Glass
+            ctx.strokeStyle = color;
+            s(w * 0.5, h * 0.8, w * 0.5, h * 0.6); // Stem
+            s(w * 0.45, h * 0.8, w * 0.55, h * 0.8); // Base
+            ctx.beginPath();
+            ctx.ellipse(w * 0.5, h * 0.55, 15, 20, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Plate
+            ctx.strokeStyle = "#94A3B8";
+            ctx.beginPath();
+            ctx.ellipse(w * 0.35, h * 0.8, 30, 10, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Text Label
+            ctx.fillStyle = color;
+            ctx.font = "20px 'Gochi Hand'";
+            ctx.textAlign = "center";
+            ctx.fillText(spotName, w/2, h/2);
+        }
+
+        function handleImageError(img, spotId) {
+            const spot = SPOTS.find(s => s.id === spotId);
+            const container = img.parentElement;
+            img.style.display = 'none';
+            
+            const canvas = document.createElement('canvas');
+            canvas.id = `fallback-${spotId}-${Math.random().toString(36).substr(2, 9)}`;
+            canvas.width = container.offsetWidth || 400;
+            canvas.height = container.offsetHeight || 300;
+            container.appendChild(canvas);
+            
+            drawVenueFallback(canvas.id, spot.name, spot.color);
+        }
+
+        async function geminiCall(payload, endpoint = "generateContent") {
+            let retries = 0;
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            while (retries < 5) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:${endpoint}?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error('API Error');
+                    return await response.json();
+                } catch (e) {
+                    retries++;
+                    if (retries === 5) throw e;
+                    await new Promise(r => setTimeout(r, delays[retries-1]));
+                }
+            }
+        }
+
+        async function getAIReview(spotId) {
+            const spot = SPOTS.find(s => s.id === spotId);
+            const btn = document.getElementById(`ai-review-btn-${spotId}`);
+            if (btn) btn.innerHTML = '<span class="loading-dots">Consulting Chef</span> ✨';
+            const prompt = `Act as a professional food critic in Tulum. Write a 2-sentence sensory review ✨ of ${spot.name}. 
+            Discuss the textures, the ocean breeze, and the specific flavor profile. 
+            Vibe context: ${spot.vibe}. Tone: Sophisticated and sensory.`;
+            try {
+                const result = await geminiCall({ contents: [{ parts: [{ text: prompt }] }] });
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                document.getElementById(`ai-review-text-${spotId}`).innerHTML = `<p class="text-sm italic text-teal-800 bg-teal-50 p-4 rounded-lg border border-teal-100">"${text}"</p>`;
+            } catch (err) {
+                console.error(err);
+            } finally {
+                if (btn) btn.innerHTML = 'Ask Gemini for a Sparkle Review ✨';
+            }
+        }
+
+        async function speakVibe(spotId) {
+            const spot = SPOTS.find(s => s.id === spotId);
+            const btn = document.getElementById(`ai-tts-btn-${spotId}`);
+            if (btn) btn.classList.add('opacity-50');
+            const text = `Experience ${spot.name}. ${spot.desc} A perfect spot for ${spot.vibe} dining on the sand.`;
+            const payload = {
+                contents: [{ parts: [{ text: `Say in a warm, sophisticated, professional travel narrator voice: ${text}` }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } }
+                }
+            };
+            try {
+                const result = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+                });
+                const data = await result.json();
+                const pcmData = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+                if (pcmData) {
+                    const buffer = Uint8Array.from(atob(pcmData), c => c.charCodeAt(0));
+                    const wavHeader = new ArrayBuffer(44);
+                    const view = new DataView(wavHeader);
+                    view.setUint32(0, 0x46464952, true); view.setUint32(4, 36 + buffer.length, true);
+                    view.setUint32(8, 0x45564157, true); view.setUint32(12, 0x20746D66, true);
+                    view.setUint16(16, 16, true); view.setUint16(20, 1, true);
+                    view.setUint16(22, 1, true); view.setUint32(24, 24000, true);
+                    view.setUint32(28, 48000, true); view.setUint16(32, 2, true);
+                    view.setUint16(34, 16, true); view.setUint32(36, 0x61746164, true);
+                    view.setUint32(40, buffer.length, true);
+                    const audio = new Audio(URL.createObjectURL(new Blob([wavHeader, buffer], { type: 'audio/wav' })));
+                    audio.play();
+                }
+            } catch (err) { console.error(err); } finally { if (btn) btn.classList.remove('opacity-50'); }
+        }
+
+        async function callConcierge() {
+            const query = document.getElementById('ai-query').value;
+            if (!query) return;
+            const btn = document.getElementById('concierge-btn');
+            btn.innerHTML = '<span class="loading-dots">Consulting Concierge</span> ✨';
+            const systemPrompt = `You are an elite Tulum Lunch Concierge. Based on this list of spots: ${JSON.stringify(SPOTS.map(s => ({id: s.id, name: s.name, vibe: s.vibe, desc: s.desc})))}. 
+            Select exactly ONE spot that matches the user's query. Return ONLY a JSON object with: { "spotId": "id", "reason": "1-sentence reason why" }.`;
+            try {
+                const result = await geminiCall({
+                    contents: [{ parts: [{ text: query }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: { responseMimeType: "application/json" }
+                });
+                const response = JSON.parse(result.candidates[0].content.parts[0].text);
+                const match = SPOTS.find(s => s.id === response.spotId);
+                const resDiv = document.getElementById('ai-response');
+                resDiv.innerHTML = `
+                    <div class="h-24 w-24 flex-shrink-0 watercolor-sketch rounded-lg"><img src="${match.img}" class="rounded-lg" onerror="handleImageError(this, '${match.id}')"/></div>
+                    <div class="flex-grow">
+                        <p class="text-[10px] font-black uppercase text-rose-600 mb-1">Concierge Recommendation ✨</p>
+                        <h5 class="text-3xl sketch-font leading-none mb-1">${match.name}</h5>
+                        <p class="text-xs text-rose-800 italic">${response.reason}</p>
+                    </div>
+                    <button onclick="openModal('${match.id}')" class="px-6 py-2 bg-rose-600 text-white font-bold sketch-font text-xl rounded shadow-md hover:scale-105 transition-transform">Explore Menu →</button>
+                `;
+                resDiv.classList.remove('hidden');
+            } catch (err) { console.error(err); } finally { btn.innerHTML = 'Ask Gemini ✨'; }
+        }
+
+        function drawIcon(canvas, type, color = '#1E293B') {
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width; const h = canvas.height;
+            ctx.clearRect(0, 0, w, h);
+            ctx.strokeStyle = color; ctx.lineWidth = w / 12;
+            ctx.lineCap = 'round';
+            const s = (x1, y1, x2, y2) => {
+                ctx.beginPath(); ctx.moveTo(x1, y1);
+                ctx.quadraticCurveTo((x1+x2)/2 + (Math.random()*4-2), (y1+y2)/2 + (Math.random()*4-2), x2, y2);
+                ctx.stroke();
+            };
+            if (type === 'knife') { s(w*0.35, h*0.2, w*0.35, h*0.8); s(w*0.65, h*0.2, w*0.65, h*0.8); }
+            else if (type === 'party') { ctx.beginPath(); ctx.arc(w*0.5, h*0.3, w*0.15, 0, Math.PI*2); ctx.stroke(); s(w*0.2, h*0.8, w*0.5, h*0.5); s(w*0.8, h*0.8, w*0.5, h*0.5); }
+            else if (type === 'pasta') { for(let i=0; i<4; i++) s(w*0.3+i*10, h*0.2, w*0.3+i*10, h*0.5); ctx.beginPath(); ctx.arc(w*0.5, h*0.7, w*0.3, 0, Math.PI); ctx.stroke(); }
+            else if (type === 'bowl') { ctx.beginPath(); ctx.arc(w*0.5, h*0.6, w*0.3, 0, Math.PI); ctx.stroke(); s(w*0.2, h*0.6, w*0.8, h*0.6); }
+            else if (type === 'taco') { ctx.beginPath(); ctx.arc(w*0.5, h*0.7, w*0.35, Math.PI, 0); ctx.stroke(); s(w*0.15, h*0.7, w*0.85, h*0.7); }
+        }
+
+        let map;
+        function initApp() {
+            map = L.map('map', { scrollWheelZoom: false }).setView([20.17, -87.45], 13);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+            const grid = document.getElementById('discovery-grid');
+            SPOTS.forEach(loc => {
+                const icon = L.divIcon({
+                    className: 'marker-wrapper',
+                    html: `<div class="custom-marker" style="width: 44px; height: 44px; border-color: ${loc.color}"><div class="marker-icon-box"><canvas id="m-${loc.id}" width="28" height="28"></canvas></div></div>`,
+                    iconSize: [44, 44], iconAnchor: [22, 44]
+                });
+                L.marker([loc.lat, loc.lng], { icon }).addTo(map).on('click', () => openModal(loc.id));
+                setTimeout(() => drawIcon(document.getElementById(`m-${loc.id}`), loc.icon, loc.color), 100);
+                const card = document.createElement('div');
+                card.className = "journal-container overflow-hidden flex flex-col transform hover:-translate-y-2 transition-all cursor-pointer group";
+                card.onclick = () => openModal(loc.id);
+                card.innerHTML = `
+                    <div class="watercolor-sketch h-56">
+                        <img src="${loc.img}" alt="${loc.name}" onerror="handleImageError(this, '${loc.id}')"/>
+                        <div class="absolute bottom-2 right-2 bg-white/90 border border-ink px-2 py-0.5 text-[9px] font-bold uppercase">$${loc.price} avg.</div>
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-3xl sketch-font text-ink leading-tight">${loc.name}</h4>
+                            <canvas id="c-icon-${loc.id}" width="32" height="32" class="opacity-40"></canvas>
+                        </div>
+                        <p class="text-[10px] uppercase font-black tracking-widest text-rose-600 mb-4">${loc.type}</p>
+                        <p class="text-xs text-gray-500 leading-relaxed italic mb-6">"${loc.desc}"</p>
+                        <button class="mt-auto w-full py-3 bg-teal-800 text-white font-bold sketch-font text-xl rounded group-hover:bg-rose-600">Explore Lunch</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+                setTimeout(() => drawIcon(document.getElementById(`c-icon-${loc.id}`), loc.icon, loc.color), 100);
+            });
+            initCharts();
+        }
+
+        function openModal(id) {
+            const loc = SPOTS.find(l => l.id === id);
+            const content = document.getElementById('modal-content');
+            content.innerHTML = `
+                <div class="space-y-6">
+                    <div class="watercolor-sketch h-80 rounded-lg shadow-inner">
+                        <img src="${loc.img}" onerror="handleImageError(this, '${loc.id}')" />
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-5xl sketch-font text-ink">${loc.name}</h2>
+                        <button onclick="speakVibe('${loc.id}')" id="ai-tts-btn-${loc.id}" class="p-2 bg-rose-100 rounded-full hover:bg-rose-200 transition-colors" title="Listen to Vibe ✨">
+                            🔊
+                        </button>
+                    </div>
+                    <p class="text-gray-600 italic border-l-4 border-teal-500 pl-4">"${loc.desc}"</p>
+                    <div id="ai-review-text-${loc.id}" class="mt-4">
+                        <button onclick="getAIReview('${loc.id}')" id="ai-review-btn-${loc.id}" class="w-full py-2 bg-rose-100 text-rose-800 font-bold rounded-lg border border-rose-200 hover:bg-rose-200 transition-all text-xs">
+                            Ask Gemini for a Sparkle Review ✨
+                        </button>
+                    </div>
+                </div>
+                <div class="journal-container p-8 bg-amber-50/20 flex flex-col">
+                    <h4 class="sketch-font text-4xl mb-6 pb-2 border-b-2 border-dashed border-ink">Sample Menu</h4>
+                    <ul class="space-y-4 mb-10 flex-grow">
+                        ${loc.menu.map(item => `<li class="flex items-start text-sm"><span class="mr-3 text-rose-500 font-bold">»</span>${item}</li>`).join('')}
+                    </ul>
+                    <a href="${loc.url}" target="_blank" class="w-full py-4 bg-teal-800 text-white font-bold sketch-font text-3xl text-center btn-hand">Official Site</a>
+                </div>
+            `;
+            document.getElementById('modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+        function initCharts() {
+            const wrap = (s) => (s.length > 16 ? s.match(/.{1,16}(\s|$)/g).map(l => l.trim()) : s);
+            const tpc = { callbacks: { title: (it) => Array.isArray(it[0].label) ? it[0].label.join(' ') : it[0].label } };
+            new Chart(document.getElementById('costChart'), {
+                type: 'bar',
+                data: { labels: SPOTS.map(l => wrap(l.name)), datasets: [{ data: SPOTS.map(l => l.price), backgroundColor: SPOTS.map(l => l.color), borderColor: '#1E293B', borderWidth: 2, borderRadius: 6 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: tpc }, scales: { y: { beginAtZero: true } } }
+            });
+            new Chart(document.getElementById('vibeChart'), {
+                type: 'polarArea',
+                data: { labels: SPOTS.map(l => wrap(l.type)), datasets: [{ data: [10, 8, 9, 7, 6], backgroundColor: SPOTS.map(l => l.color + 'AA'), borderColor: '#FFFDF5', borderWidth: 3 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }, tooltip: tpc } }
+            });
+        }
+        window.onload = initApp;
+    </script>
+</body>
+</html>
